@@ -3,11 +3,17 @@ let tweets = [
   { id: "1", text: "one" },
   { id: "2", text: "two" },
 ];
+let users = [
+  { id: "1", userName: "mia", firstName: "pack" },
+  { id: "2", userName: "gummy", firstName: "u" },
+];
 
 const typeDefs = gql`
   type User {
     id: ID!
     userName: String!
+    firstName: String!
+    fullName: String!
   }
 
   type Tweet {
@@ -19,6 +25,7 @@ const typeDefs = gql`
   type Query {
     allTweets: [Tweet!]!
     tweet(id: ID!): Tweet
+    allUsers: [User!]!
   }
 
   type Mutation {
@@ -34,6 +41,9 @@ const resolvers = {
     },
     tweet(root, { id }) {
       return tweets.find((tweet) => tweet.id === id);
+    },
+    allUsers() {
+      return users;
     },
   },
   Mutation: {
@@ -51,6 +61,11 @@ const resolvers = {
 
       tweets = tweets.filter((tweet) => tweet.id !== id);
       return true;
+    },
+  },
+  User: {
+    fullName({ firstName, userName }) {
+      return `${firstName} ${userName}`;
     },
   },
 };
